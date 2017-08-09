@@ -71,8 +71,8 @@ public class IndexServlet extends HttpServlet {
                     result.put(nName, nValue);
                 }
             }
-            String toUserName = result.get("ToUserName");
-            String encrypt = result.get("Encrypt");
+            String toUserName = result1.get("ToUserName");
+            String encrypt = result1.get("Encrypt");
             String format = "<xml><ToUserName><![CDATA[%s]]></ToUserName><Encrypt><![CDATA[%s]]></Encrypt></xml>";
             String fromXML = String.format(format, toUserName, encrypt);
             WXBizMsgCrypt pc = new WXBizMsgCrypt(token, encodingAesKey, appId);
@@ -173,3 +173,6 @@ public class IndexServlet extends HttpServlet {
         }
     }
 }
+
+
+
