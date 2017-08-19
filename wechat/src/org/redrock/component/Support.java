@@ -2,13 +2,9 @@ package org.redrock.component;
 
 import com.qq.weixin.mp.aes.AesException;
 import com.qq.weixin.mp.aes.WXBizMsgCrypt;
-import org.redrock.message.BaseMessage;
-import org.redrock.message.handle.BaseMessageHandle;
-import org.redrock.message.handle.TextMessageHandle;
-import com.web.util.*;
+import org.redrock.util.*;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.redrock.util.*;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -22,8 +18,9 @@ import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
-
-
+/**
+ * Created by jx on 2017/7/21.
+ */
 public class Support {
 
     private static final String FORMAT = "<xml><ToUserName><![CDATA[toUser]]></ToUserName><Encrypt><![CDATA[%1$s]]></Encrypt></xml>";
@@ -42,7 +39,7 @@ public class Support {
         }
     }
 
-    public static Map<String, String> receiveMessage(HttpServletRequest request, HttpServletResponse response) {
+    /*public static Map<String, String> receiveMessage(HttpServletRequest request, HttpServletResponse response) {
         String timestamp = request.getParameter("timestamp");
         String nonce = request.getParameter("nonce");
         String signature = request.getParameter("signature");
@@ -79,7 +76,7 @@ public class Support {
         } finally {
             return data;
         }
-    }
+    }*/
 
     public static String getAccessToken() throws JSONException {
         Jedis jedis = JedisUtil.getJedis();
@@ -122,7 +119,7 @@ public class Support {
         return result;
     }
 
-    public static void getReplyMessage(HttpServletRequest request, HttpServletResponse response, Map<String, String> receiveMessage) {
+    /*public static void getReplyMessage(HttpServletRequest request, HttpServletResponse response, Map<String, String> receiveMessage) {
         try {
             String messageType = receiveMessage.get("MsgType");
             BaseMessageHandle handle;
@@ -161,11 +158,10 @@ public class Support {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
     private static boolean ifEncrypt (HttpServletRequest request) {
         String encryptType = request.getParameter("encrypt_type");
         return encryptType != null && "aes".equals(encryptType);
     }
 }
-

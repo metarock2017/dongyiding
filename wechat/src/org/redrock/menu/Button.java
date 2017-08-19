@@ -86,23 +86,56 @@ public class Button {
     }
 
     public static void main(String[] args) throws IOException, JSONException {
-        Button b1 = new Button();
-        b1.setType("scancode_waitmsg");
-        b1.setName("扫码带提示");
-        b1.setKey("rselfmenu_0_0");
-        Button b2 = new Button();
-        b2.setType("scancode_push");
-        b2.setName("扫码推事件");
-        b2.setKey("rselfmenu_0_1");
-        Button m1 = new Button();
-        m1.setName("扫码");
-        List<Button> m1SubButs = new ArrayList<>();
-        m1SubButs.add(b1);
-        m1SubButs.add(b2);
-        m1.setSubButton(m1SubButs);
+        Button sub_button11 = new Button();
+        sub_button11.setType("view");
+        sub_button11.setName("谁是卧底");
+        Button sub_button12 = new Button();
+        sub_button12.setType("view");
+        sub_button12.setName("游戏帮助");
+        Button button1 = new Button();
+        button1.setName("谁是卧底");
+        List<Button> buttons1 = new ArrayList<>();
+        buttons1.add(sub_button11);
+        buttons1.add(sub_button12);
+        button1.setSubButton(buttons1);
+
+        Button sub_button21 = new Button();
+        sub_button21.setType("view");
+        sub_button21.setName("创建房间");
+        Button sub_button22 = new Button();
+        sub_button22.setType("view");
+        sub_button22.setName("开始游戏");
+        Button sub_button23 = new Button();
+        sub_button23.setType("view");
+        sub_button23.setName("管理房间");
+        Button button2 = new Button();
+        button2.setName("在线玩谁是卧底");
+        List<Button> buttons2 = new ArrayList<>();
+        buttons2.add(sub_button21);
+        buttons2.add(sub_button22);
+        button1.setSubButton(buttons2);
+
+        Button sub_button31 = new Button();
+        sub_button31.setType("view");
+        sub_button31.setName("加入我们");
+        Button sub_button32 = new Button();
+        sub_button32.setType("view");
+        sub_button32.setName("更多游戏");
+        Button button3 = new Button();
+        button3.setName("玩游戏");
+        List<Button> buttons3 = new ArrayList<>();
+        buttons3.add(sub_button31);
+        buttons3.add(sub_button32);
+        button3.setSubButton(buttons3);
+
+        List<Button> buttons = new ArrayList<>();
+        buttons.add(button1);
+        buttons.add(button2);
+        buttons.add(button3);
+
         JSONObject object = null;
         try {
-            object = m1.toJson();
+            object = button1.toJson();
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -116,6 +149,7 @@ public class Button {
         }
         System.out.println(data);
         String path = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token=" + Support.getAccessToken();
+        System.out.println(path);
         URL url = new URL(path);
         URLConnection connection = url.openConnection();
         connection.setDoOutput(true);

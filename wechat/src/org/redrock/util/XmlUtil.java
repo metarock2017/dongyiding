@@ -1,4 +1,4 @@
-package util;
+package org.redrock.util;
 
 import org.w3c.dom.*;
 import org.xml.sax.InputSource;
@@ -10,15 +10,13 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.StringReader;
 
-
 /**
  * xml中区分 Node Element Attribute三者区别，注意Node的种类
  */
 public class XmlUtil {
     public static void main(String[] args) throws ParserConfigurationException, IOException, SAXException {
         //把字符串转化为Document对象
-        String xml = CurlUtil.getContent("http://hongyan.cqupt.edu.cn/MagicLoop/index.php?s=/addon/InquiryExam/InquiryExam/testAtHome&type=qmcj&xh=2015211878", null, "GET");
-        //System.out.println(xml);
+        String xml = CurlUtil.getContent("http://www.w3school.com.cn/example/xmle/plant_catalog.xml", null, "GET");
         StringReader reader = new StringReader(xml);
         InputSource source = new InputSource(reader);
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -29,33 +27,13 @@ public class XmlUtil {
         Element rootNode = document.getDocumentElement();
         readNode(rootNode, stringBuilder);
         String out = stringBuilder.toString();
-        //System.out.println(out);
-        NodeList nodeList = rootNode.getChildNodes();
-        Node child = nodeList.item(4);
-        //System.out.println(child);
-        nodeList = child.getChildNodes();
-
-        Node child1 = null;
-        int sum = 0;
-        for (int i = 0; i<15; i++) {
-            Node child2 = nodeList.item(i);
-            //child1 = Integer.parseInt(child2.getLastChild().getTextContent());
-            //sum = child1 + sum;
-            sum = sum + Integer.parseInt(child2.getLastChild().getTextContent());
-        }
-        //System.out.println(sum);
-        int aver = sum/15;
-        System.out.println(aver);
+        System.out.println(out);
     }
-
-/*
-    */
-/**
+    /**
      * 递归解析xml
      * @param node
      * @param builder
      */
-
     public static void readNode(Node node, StringBuilder builder) {
         if (node.getNodeType() == Node.TEXT_NODE) {
             if (!node.getTextContent().trim().equals("")) {

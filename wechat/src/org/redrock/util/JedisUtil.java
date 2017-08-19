@@ -12,4 +12,9 @@ public class JedisUtil {
     public static Jedis getJedis() {
         return new Jedis("localhost");
     }
+
+/*    public static void main(String[] args) {
+        Jedis jedis = getJedis();
+        jedis.expire(Const.KeyOfAccessToken, 2);
+    }*/
 }

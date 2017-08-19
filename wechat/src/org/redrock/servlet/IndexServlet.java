@@ -1,7 +1,5 @@
 package org.redrock.servlet;
 
-import com.qq.weixin.mp.aes.AesException;
-import com.qq.weixin.mp.aes.WXBizMsgCrypt;
 import org.redrock.util.Const;
 import org.redrock.util.EncryptUtil;
 import org.redrock.util.StringUtil;
@@ -9,7 +7,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import javax.servlet.ServletException;
@@ -20,84 +17,39 @@ import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-
 //配置路由
-//@WebServlet(name = "IndexServlet", value = "/")
+@WebServlet(name = "IndexServlet", value = "/")
 public class IndexServlet extends HttpServlet {
     //post请求处理
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            Map<String, String[]> params = request.getParameterMap();
-//            for (String param : params.keySet()) {
-//                System.out.println(param);
-//            }
-            String encodingAesKey = Const.EncodingAESKey;
-            String token = Const.Token;
-            String appId = Const.AppId;
-            String timestamp = request.getParameter("timestamp");
-            String nonce = request.getParameter("nonce");
-            String msgSignature = request.getParameter("msg_signature");
-            BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(
-                            request.getInputStream(), "UTF-8"
-                    )
-            );
-            StringBuilder builder = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                builder.append(line);
-            }
-            String encryptMsg = builder.toString();
+            //从request请求中获取输入流
+            InputStream inputStream = request.getInputStream();
+            //通过输入流获取Document对象
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder builder1 = factory.newDocumentBuilder();
-            Document document = builder1.parse(
-                    new InputSource(
-                            new StringReader(encryptMsg)
-                    )
-            );
-            Element element = document.getDocumentElement();
-            NodeList nodeList = element.getChildNodes();
-            Map<String, String> result = new HashMap<>();
-            for (int i = 0; i < nodeList.getLength(); i++) {
-                Node node = nodeList.item(i);
-                if (!node.getNodeName().equals("#text")) {
-                    String nName = node.getNodeName();
-                    String nValue = node.getTextContent();
-                    result.put(nName, nValue);
-                }
-            }
-            String toUserName = result1.get("ToUserName");
-            String encrypt = result1.get("Encrypt");
-            String format = "<xml><ToUserName><![CDATA[%s]]></ToUserName><Encrypt><![CDATA[%s]]></Encrypt></xml>";
-            String fromXML = String.format(format, toUserName, encrypt);
-            WXBizMsgCrypt pc = new WXBizMsgCrypt(token, encodingAesKey, appId);
-            String result2 = pc.decryptMsg(msgSignature, timestamp, nonce, fromXML);
-            //System.out.println("解密后明文: " + result2);
-
-            DocumentBuilderFactory factory2 = DocumentBuilderFactory.newInstance();
-            DocumentBuilder builder2 = null;
-            builder2 = factory2.newDocumentBuilder();
-            Document document2 = builder2.parse(
-                    new InputSource(new StringReader(result2))
-            );
-
+            DocumentBuilder builder = null;
+            builder = factory.newDocumentBuilder();
+            Document document = builder.parse(inputStream);
+            //<xml>
+            //  <ToUserName><![CDATA[gh_b6a171776f25]]></ToUserName>
+            //  <FromUserName><![CDATA[oiL6j0WJxy7Nagpnt6rX7Yo_5LeM]]></FromUserName><CreateTime>1501741106</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[emmm]]></Content><MsgId>6449928937743195428</MsgId></xml>
             //获取根节点
-            Element rootNode = document2.getDocumentElement();
+            Element rootNode = document.getDocumentElement();
             //根节点名
             String name = rootNode.getNodeName();
             //获取子节点数组
             NodeList items = rootNode.getChildNodes();
-            Map<String, String> result3 = new HashMap<>();
+            Map<String, String> result = new HashMap<>();
             //子节点遍历
             for (int i = 0; i < items.getLength(); i++) {
                 Node item = items.item(i);
                 String iName = item.getNodeName();
-//                System.out.println(iName);
                 //<ToUserName><![CDATA[gh_b6a171776f25]]></ToUserName>
                 //注意：ToUserName标签内部的文本内容实际上也是一个节点，这里不能通过getNodeValue直接获取节点内容
                 String value = item.getTextContent();
@@ -106,39 +58,76 @@ public class IndexServlet extends HttpServlet {
                 }
                 result.put(iName, value);
             }
-
-
-            //遍历result2
-            String toUser = result.get("FromUserName");
-
-            System.out.println(toUser);
-            if(encrypt == null || encrypt.equals("raw")){
-
-                //xml格式化
+            String Content = result.get("Content");
+            String Event = result.get("Event");
+            //System.out.println(result);
+                if (Event != null && Event.equals("subscribe")) {
+                    //xml格式化
+                    String xml = "<xml>" +
+                            "<ToUserName><![CDATA[%s]]></ToUserName>" +
+                            "<FromUserName><![CDATA[%s]]></FromUserName>" +
+                            "<CreateTime>%s</CreateTime>" +
+                            "<MsgType><![CDATA[%s]]></MsgType>" +
+                            "<ArticleCount>1</ArticleCount>" +
+                            "<Articles>" +
+                            "<item>" +
+                            "<Title><![CDATA[%s]]></Title> " +
+                            "<Description><![CDATA[%s]]></Description>" +
+                            "<PicUrl><![CDATA[%s]]></PicUrl>" +
+                            "<Url><![CDATA[%s]]></Url>" +
+                            "</item>" +
+                            "</Articles>" +
+                            "</xml>";
+                    String toUser = result.get("FromUserName");
+                    String fromUser = result.get("ToUserName");
+                    String createTime = System.currentTimeMillis() / 1000 + "";
+                    String msgType = "news";
+                    String Title = "Hello";
+                    String Description = "欢迎关注dyd的公众号";
+                    String PicUrl = "http://b114.photo.store.qq.com/psb?/V12Dh5WD3OfwB5/9LyRsHTnwqB1*6gWEVcbTfqEuTvqLKoXlh6kFDQGAeo!/b/dHIAAAAAAAAA&bo=xgCaAAAAAAAREHs!&rf=viewer_311";
+                    String Url = "https://github.com/metarock2017/dongyiding";
+                    //格式化输出
+                    String res = String.format(xml, toUser, fromUser, createTime, msgType, Title, Description, PicUrl, Url);
+                    //response相应输出
+                    response.setCharacterEncoding("UTF-8");
+                    response.getWriter().println(res);
+                }
+            else if(Content != null && Content.equals("redrock")) {
                 String xml = "<xml>" +
                         "<ToUserName><![CDATA[%s]]></ToUserName>" +
                         "<FromUserName><![CDATA[%s]]></FromUserName>" +
                         "<CreateTime>%s</CreateTime>" +
                         "<MsgType><![CDATA[%s]]></MsgType>" +
-                        "<Content><![CDATA[%s]]></Content>" +
+                        "<ArticleCount>1</ArticleCount>" +
+                        "<Articles>" +
+                        "<item>" +
+                        "<Title><![CDATA[%s]]></Title> " +
+                        "<Description><![CDATA[%s]]></Description>" +
+                        "<PicUrl><![CDATA[%s]]></PicUrl>" +
+                        "<Url><![CDATA[%s]]></Url>" +
+                        "</item>" +
+                        "</Articles>" +
                         "</xml>";
+                String toUser = result.get("FromUserName");
                 String fromUser = result.get("ToUserName");
                 String createTime = System.currentTimeMillis() / 1000 + "";
-                String msgType = "text";
-                String content = "hello";
+                String msgType = "news";
+                String Title = "Redrock";
+                String Description = "这是重庆邮电大学最牛逼的学生组织没有之一";
+                String PicUrl = "http://hongyan.cqupt.edu.cn/images/index_top.jpg";
+                String Url = "http://hongyan.cqupt.edu.cn/";
                 //格式化输出
-                String res =String.format(xml, toUser, fromUser, createTime, msgType, content);
+                String res = String.format(xml, toUser, fromUser, createTime, msgType, Title, Description, PicUrl, Url);
                 //response相应输出
+                response.setCharacterEncoding("UTF-8");
                 response.getWriter().println(res);
             }
-            else{
+            else {
 
-            };
+            }
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
         } catch (SAXException e) {
-            e.printStackTrace();
-        } catch (AesException e) {
             e.printStackTrace();
         }
     }
@@ -173,6 +162,3 @@ public class IndexServlet extends HttpServlet {
         }
     }
 }
-
-
-

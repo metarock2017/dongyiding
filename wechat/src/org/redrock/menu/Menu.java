@@ -14,22 +14,53 @@ public class Menu {
     public static void main(String[] args) {
         Menu menu = new Menu();
 
+        Button sub_button11 = new Button();
+        sub_button11.setType("view");
+        sub_button11.setName("谁是卧底");
+        sub_button11.setUrl("http://hongyan.cqupt.edu.cn/");
+        Button sub_button12 = new Button();
+        sub_button12.setType("view");
+        sub_button12.setName("游戏帮助");
+        sub_button12.setUrl("http://hongyan.cqupt.edu.cn/");
         Button button1 = new Button();
-        button1.setType("click");
-        button1.setName("今日歌曲");
-        button1.setKey("V1001_TODAY_MUSIC");
+        button1.setName("谁是卧底");
 
+        Button sub_button21 = new Button();
+        sub_button21.setType("view");
+        sub_button21.setName("创建房间");
+        sub_button21.setUrl("http://hongyan.cqupt.edu.cn/");
+        Button sub_button22 = new Button();
+        sub_button22.setType("view");
+        sub_button22.setName("开始游戏");
+        sub_button22.setUrl("http://hongyan.cqupt.edu.cn/");
+        Button sub_button23 = new Button();
+        sub_button23.setType("view");
+        sub_button23.setName("管理房间");
+        sub_button23.setUrl("http://hongyan.cqupt.edu.cn/");
         Button button2 = new Button();
-        button2.setName("菜单");
+        button2.setName("在线玩");
 
+        Button sub_button31 = new Button();
+        sub_button31.setType("view");
+        sub_button31.setName("加入我们");
+        sub_button31.setUrl("http://hongyan.cqupt.edu.cn/");
+        Button sub_button32 = new Button();
+        sub_button32.setType("view");
+        sub_button32.setName("更多游戏");
+        sub_button32.setUrl("http://hongyan.cqupt.edu.cn/");
         Button button3 = new Button();
-        button3.setType("click");
-        button3.setName("搜索");
-        button3.setUrl("http://jx3536.s1.natapp.link/test");
+        button3.setName("玩游戏");
 
-        button2.addButton(button3);
+        button1.addButton(sub_button11);
+        button1.addButton(sub_button12);
+        button2.addButton(sub_button21);
+        button2.addButton(sub_button22);
+        button2.addButton(sub_button23);
+        button3.addButton(sub_button31);
+        button3.addButton(sub_button32);
         menu.addButton(button1);
         menu.addButton(button2);
+        menu.addButton(button3);
 
         String result = null;
         try {
@@ -45,6 +76,7 @@ public class Menu {
         System.out.println(accessToken);
         String url = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token=" + accessToken;
         String menuData = menu.toJson();
+        System.out.println(menuData);
         return CurlUtil.postData(url, menuData);
     }
 
