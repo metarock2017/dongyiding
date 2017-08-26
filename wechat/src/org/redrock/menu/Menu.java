@@ -1,23 +1,44 @@
 package org.redrock.menu;
 
 import org.redrock.component.Support;
+import org.redrock.util.Const;
 import org.redrock.util.CurlUtil;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.redrock.util.DBConnection;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Menu {
+    public DBConnection dbConnection = new DBConnection();
 
     public static void main(String[] args) {
         Menu menu = new Menu();
 
         Button sub_button11 = new Button();
-        sub_button11.setType("view");
+        sub_button11.setType("click");
         sub_button11.setName("谁是卧底");
-        sub_button11.setUrl("http://hongyan.cqupt.edu.cn/");
+        sub_button11.setKey("createroom");
         Button sub_button12 = new Button();
         sub_button12.setType("view");
         sub_button12.setName("游戏帮助");

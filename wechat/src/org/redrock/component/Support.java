@@ -95,7 +95,7 @@ public class Support {
             }
         }
         return jedis.hget(key, "accessToken");
-    }
+}
 
     private static boolean isInvalid(Jedis jedis, String key) {
         return !jedis.exists(key) ||

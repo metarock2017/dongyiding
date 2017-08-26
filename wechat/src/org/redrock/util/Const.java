@@ -14,6 +14,7 @@ public class Const {
     public static final String Token = "xxx";
     //测试账号暂时不用配置
     public static final String EncodingAESKey = "g03cJU585bdbs8sVlN0k5wOCkSSylFNRJ1l123JntY3";
-
     public static final String KeyOfAccessToken = "keyofaccesstoken";
 }
+
+
