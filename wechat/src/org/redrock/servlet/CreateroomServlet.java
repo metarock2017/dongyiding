@@ -25,8 +25,5 @@ public class CreateroomServlet extends HttpServlet {
         CreateroomService createroomService = new CreateroomService();
 
         String json = null;
-        //json = createroomService.create(10, Const.AppId);
-        System.out.println(11111111);
-        //resp.getWriter().print(json);
     }
 }

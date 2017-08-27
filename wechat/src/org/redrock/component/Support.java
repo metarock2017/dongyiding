@@ -9,6 +9,7 @@ import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import redis.clients.jedis.Jedis;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.DocumentBuilder;
@@ -39,45 +40,6 @@ public class Support {
         }
     }
 
-    /*public static Map<String, String> receiveMessage(HttpServletRequest request, HttpServletResponse response) {
-        String timestamp = request.getParameter("timestamp");
-        String nonce = request.getParameter("nonce");
-        String signature = request.getParameter("signature");
-        String token = Const.Token;
-        String encodingAESKey = Const.EncodingAESKey;
-        String appId = Const.AppId;
-        Map<String, String> data = null;
-        try {
-            if (!StringUtil.hasBlank(timestamp, nonce, signature)) {
-                InputStream inputStream = request.getInputStream();
-                DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-                DocumentBuilder builder = factory.newDocumentBuilder();
-                Document dom = builder.parse(inputStream);
-                data = StringUtil.parseXml(dom);
-                if (ifEncrypt(request)) {
-                    String msgSignature = request.getParameter("msg_signature");
-                    String postData = String.format(FORMAT, data.get("Encrypt"));
-                    WXBizMsgCrypt pc = new WXBizMsgCrypt(token, encodingAESKey, appId);
-                    String decodeXml = pc.decryptMsg(msgSignature, timestamp, nonce, postData);
-                    StringReader sr = new StringReader(decodeXml);
-                    InputSource source = new InputSource(sr);
-                    Document decodeDom = builder.parse(source);
-                    data = StringUtil.parseXml(decodeDom);
-                }
-            }
-        } catch (AesException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        } catch (SAXException e) {
-            e.printStackTrace();
-        } finally {
-            return data;
-        }
-    }*/
-
     public static String getAccessToken() throws JSONException {
         Jedis jedis = JedisUtil.getJedis();
         String key = Const.KeyOfAccessToken;
@@ -95,7 +57,7 @@ public class Support {
             }
         }
         return jedis.hget(key, "accessToken");
-}
+    }
 
     private static boolean isInvalid(Jedis jedis, String key) {
         return !jedis.exists(key) ||
@@ -119,48 +81,7 @@ public class Support {
         return result;
     }
 
-    /*public static void getReplyMessage(HttpServletRequest request, HttpServletResponse response, Map<String, String> receiveMessage) {
-        try {
-            String messageType = receiveMessage.get("MsgType");
-            BaseMessageHandle handle;
-            BaseMessage message = null;
-            switch (messageType) {
-//                {Content=fsdfsdf, CreateTime=1500813625, ToUserName=gh_b6a171776f25, FromUserName=oiL6j0e16ZpAXBKLIprkQ43fPtgk, MsgType=text, MsgId=6445945437180380102}
-                case "text":
-                    handle = new TextMessageHandle(receiveMessage);
-                    message = handle.processRequest();
-                    break;
-//                {MediaId=PL4cME3axznx-l9VktVKLyXNvVgbd3cSw83uAWOWDt9VtAeD6kokOabgY1Lh-b9f, CreateTime=1500813904, ToUserName=gh_b6a171776f25, FromUserName=oiL6j0e16ZpAXBKLIprkQ43fPtgk, MsgType=image, PicUrl=http://mmbiz.qpic.cn/mmbiz_jpg/47SbIhETSCpmq5auHVcOjoNMiax7fEyeECBLKV0w2zZhGxEgMicVLpxMlaqqBbaDFHSutHEB1IygsnciatPlYr7Mg/0, MsgId=6445946635476255707}
-//            case "image" :
-//                break;
-//                {Format=amr, MediaId=kUIyyyYmDLVAnEDNMpd_atiWk8Ry1JOp3vLKxfmopkVHDhwphtsz95HKSBE4AceX, CreateTime=1500813944, ToUserName=gh_b6a171776f25, FromUserName=oiL6j0e16ZpAXBKLIprkQ43fPtgk, MsgType=voice, MsgId=6445946806860775424, Recognition=哈哈哈！}
-//            case "voice" :
-//                break;
-
-//            case "video" :
-//                break;
-//                {Location_X=29.532058, CreateTime=1500813982, Location_Y=106.606881, Label=重庆市南岸区重庆邮电大学, Scale=15, ToUserName=gh_b6a171776f25, FromUserName=oiL6j0e16ZpAXBKLIprkQ43fPtgk, MsgType=location, MsgId=6445946970483704801}
-//            case "location" :
-//                break;
-//            case "link" :
-//                break;
-//            {CreateTime=1500813720, EventKey=, Event=unsubscribe, ToUserName=gh_b6a171776f25, FromUserName=oiL6j0e16ZpAXBKLIprkQ43fPtgk, MsgType=event}
-                case "event" :
-                    break;
-                default:
-                    break;
-            }
-            if (message != null) {
-                String result = ifEncrypt(request) ? message.encodeXml(request) : message.toXml();
-                response.setCharacterEncoding("UTF-8");
-                response.getWriter().print(result);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }*/
-
-    private static boolean ifEncrypt (HttpServletRequest request) {
+    private static boolean ifEncrypt(HttpServletRequest request) {
         String encryptType = request.getParameter("encrypt_type");
         return encryptType != null && "aes".equals(encryptType);
     }

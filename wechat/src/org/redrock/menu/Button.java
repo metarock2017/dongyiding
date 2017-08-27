@@ -5,6 +5,7 @@ import org.redrock.util.StringUtil;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
@@ -59,7 +60,9 @@ public class Button {
         this.subButton = subButton;
     }
 
-    public void setUrl(String url) { this.url = url; }
+    public void setUrl(String url) {
+        this.url = url;
+    }
 
     public JSONObject toJson() throws JSONException {
         JSONObject jsonObject = new JSONObject();

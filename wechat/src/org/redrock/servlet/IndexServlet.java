@@ -36,10 +36,6 @@ public class IndexServlet extends HttpServlet {
     //post请求处理
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-//            Map<String, String[]> params = request.getParameterMap();
-//            for (String param : params.keySet()) {
-//                System.out.println(param);
-//            }
             String encodingAesKey = Const.EncodingAESKey;
             String token = Const.Token;
             String appId = Const.AppId;
@@ -170,7 +166,7 @@ public class IndexServlet extends HttpServlet {
                             else {
                                 resultMessage = "点击“谁是卧底”创建房间\n回复房间号加入房间";
                             }
-                        }else {
+                        } else {
                             resultMessage = "点击“谁是卧底”创建房间\n回复房间号加入房间";
                         }
                         xml = "<xml>" +
@@ -237,30 +233,7 @@ public class IndexServlet extends HttpServlet {
                 response.setCharacterEncoding("UTF-8");
                 response.getWriter().println(res);
 
-            }
-//            else if (Content!=null && Content.equals("换词")) {
-//                String toUser = result.get("FromUserName");
-//                String fromUser = result.get("ToUserName");
-//                ChangewordsService changewordsService = new ChangewordsService();
-//                String xml = "<xml>" +
-//                        "<ToUserName><![CDATA[%s]]></ToUserName>" +
-//                        "<FromUserName><![CDATA[%s]]></FromUserName>" +
-//                        "<CreateTime>%s</CreateTime>" +
-//                        "<MsgType><![CDATA[%s]]></MsgType>" +
-//                        "<Content><![CDATA[%s]]></Content>" +
-//                        "</xml>";
-//                String createTime = System.currentTimeMillis() / 1000 + "";
-//                String msgType = "text";
-//                String content = changewordsService.change(toUser);
-//                //格式化输出
-//                String res = String.format(xml, toUser, fromUser, createTime, msgType, content);
-//                //response相应输出
-//                response.setCharacterEncoding("UTF-8");
-//                response.getWriter().println(res);
-//            }
-
-
-            else {
+            } else {
 
             }
         } catch (ParserConfigurationException e) {
